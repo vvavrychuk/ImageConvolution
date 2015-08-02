@@ -11,19 +11,36 @@ namespace Convolution
 {
     class Program
     {
-        static int ModFloor(int a, int n)
+        static double Sum(Matrix<double> matrix)
         {
-            return a - n * (int) Math.Floor((double)a / n);
+            double value = 0;
+            for (var i = 0; i < matrix.RowCount; i++)
+            {
+                for (var j = 0; j < matrix.ColumnCount; j++)
+                {
+                    value += matrix[i, j];
+                }
+            }
+            return value;
         }
 
-        static Matrix<double> Circshift(Matrix<double> input, int i, int j)
+        static Matrix<double> Convolution(Tuple<int, int> dimension, MatrixInfinite matrixInfinite, Matrix<double> matrixFinite)
         {
-            var output = Matrix<double>.Build.Dense(input.RowCount, input.ColumnCount);
-            for (int n = 0; n < input.RowCount; n++)
+            var output = Matrix<double>.Build.Dense(dimension.Item1, dimension.Item2);
+            for (var i1 = 0; i1 < matrixFinite.RowCount; i1++)
             {
-                for (int k = 0; k < input.ColumnCount; k++)
+                for (var j1 = 0; j1 < matrixFinite.ColumnCount; j1++)
                 {
-                    output[n, k] = input[ModFloor(n - i, input.RowCount), ModFloor(k - j, input.ColumnCount)];
+                    if (matrixFinite[i1, j1] != 0)
+                    {
+                        for (var i = 0; i < output.RowCount; i++)
+                        {
+                            for (var j = 0; j < output.ColumnCount; j++)
+                            {
+                                output[i, j] += matrixFinite[i1, j1] * matrixInfinite[i - i1, j - j1];
+                            }
+                        }
+                    }
                 }
             }
             return output;
@@ -31,20 +48,8 @@ namespace Convolution
 
         static Matrix<double> Blur(Matrix<double> input, Matrix<double> pattern)
         {
-            var output = Matrix<double>.Build.Dense(input.RowCount, input.ColumnCount);
-            double total = 0.0;
-            for (var i = 0; i < pattern.RowCount; i++)
-            {
-                for (var j = 0; j < pattern.ColumnCount; j++)
-                {
-                    if (pattern[i, j] != 0)
-                    {
-                        output += pattern[i, j] * Circshift(input, i, j);
-                        total += pattern[i, j];
-                    }
-                }
-            }
-            return output / total;
+            var dimension = new Tuple<int, int>(input.RowCount, input.ColumnCount);
+            return Convolution(dimension, new MatrixInfinite(input), pattern) / Sum(pattern);
         }
 
         static void Main(string[] args)
