@@ -49,7 +49,7 @@ namespace Convolution
         static Matrix<double> Blur(Matrix<double> input, Matrix<double> pattern)
         {
             var dimension = new Tuple<int, int>(input.RowCount, input.ColumnCount);
-            return Convolution(dimension, new MatrixInfinite(input), pattern) / Sum(pattern);
+            return Convolution(dimension, new MatrixInfiniteMod(input), pattern) / Sum(pattern);
         }
 
         static void Main(string[] args)
