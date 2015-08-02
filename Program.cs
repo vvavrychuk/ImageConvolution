@@ -16,36 +16,6 @@ namespace Convolution
             return a - n * (int) Math.Floor((double)a / n);
         }
 
-        static Matrix<double> ReadImageGrayScale(string path)
-        {
-            var bitmap = new Bitmap(path);
-            var bitmap2 = Matrix<double>.Build.Dense(bitmap.Width, bitmap.Height);
-            for (int i = 0; i < bitmap.Width; i++)
-            {
-                for (int j = 0; j < bitmap.Height; j++)
-                {
-                    bitmap2[i, j] = (bitmap.GetPixel(i, j).R + bitmap.GetPixel(i, j).G + bitmap.GetPixel(i, j).B) / 255.0 / 3.0;
-                }
-            }
-            return bitmap2;
-        }
-
-        static void SaveImage(Matrix<double> bitmap, string path)
-        {
-            using (var bitmap2 = new Bitmap(bitmap.RowCount, bitmap.ColumnCount))
-            {
-                for (int i = 0; i < bitmap2.Width; i++)
-                {
-                    for (int j = 0; j < bitmap2.Height; j++)
-                    {
-                        var color = (int)(bitmap[i, j] * 256);
-                        bitmap2.SetPixel(i, j, Color.FromArgb(color, color, color));
-                    }
-                }
-                bitmap2.Save(path, ImageFormat.Png);
-            }
-        }
-
         static Matrix<double> Circshift(Matrix<double> input, int i, int j)
         {
             var output = Matrix<double>.Build.Dense(input.RowCount, input.ColumnCount);
@@ -79,9 +49,10 @@ namespace Convolution
 
         static void Main(string[] args)
         {
-            var marcie1 = ReadImageGrayScale(@"..\..\marcie1.png");
-            var hexagon = ReadImageGrayScale(@"..\..\hexagon.png");
-            SaveImage(Blur(marcie1, hexagon), @"..\..\marcie2.png");
+            var marcie1 = ImageSerializer.ReadImage(@"..\..\marcie1.png");
+            var hexagon = ImageSerializer.ReadImage(@"..\..\hexagon.png");
+            var marcie2 = Blur(marcie1, hexagon);
+            ImageSerializer.SaveImage(marcie2, @"..\..\marcie2.png");
         }
     }
 }
