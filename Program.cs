@@ -27,9 +27,9 @@ namespace Convolution
         static Matrix Convolution(Tuple<int, int> dimension, MatrixInfinite matrixInfinite, Matrix matrixFinite)
         {
             var output = new Matrix(dimension.Item1, dimension.Item2);
-            for (var i1 = 0; i1 < matrixFinite.RowCount; i1++)
+            for (var i1 = matrixFinite.Ranges[0, 0]; i1 < matrixFinite.Ranges[0, 1]; i1++)
             {
-                for (var j1 = 0; j1 < matrixFinite.ColumnCount; j1++)
+                for (var j1 = matrixFinite.Ranges[1, 0]; j1 < matrixFinite.Ranges[1, 1]; j1++)
                 {
                     if (matrixFinite[i1, j1] != 0)
                     {
@@ -49,7 +49,7 @@ namespace Convolution
         static Matrix Blur(Matrix input, Matrix pattern)
         {
             var dimension = new Tuple<int, int>(input.RowCount, input.ColumnCount);
-            return Convolution(dimension, new MatrixInfiniteMod(input), pattern) / Sum(pattern);
+            return Convolution(dimension, new MatrixInfiniteZero(input), pattern.Center()) / Sum(pattern);
         }
 
         static void Main(string[] args)
