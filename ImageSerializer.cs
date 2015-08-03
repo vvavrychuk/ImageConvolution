@@ -1,5 +1,4 @@
-﻿using MathNet.Numerics.LinearAlgebra;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -11,10 +10,10 @@ namespace Convolution
 {
     class ImageSerializer
     {
-        public static Matrix<double> ReadImage(string path)
+        public static Matrix ReadImage(string path)
         {
             var bitmap = new Bitmap(path);
-            var bitmap2 = Matrix<double>.Build.Dense(bitmap.Width, bitmap.Height);
+            var bitmap2 = new Matrix(bitmap.Width, bitmap.Height);
             for (int i = 0; i < bitmap.Width; i++)
             {
                 for (int j = 0; j < bitmap.Height; j++)
@@ -25,7 +24,7 @@ namespace Convolution
             return bitmap2;
         }
 
-        public static void SaveImage(Matrix<double> bitmap, string path)
+        public static void SaveImage(Matrix bitmap, string path)
         {
             using (var bitmap2 = new Bitmap(bitmap.RowCount, bitmap.ColumnCount))
             {

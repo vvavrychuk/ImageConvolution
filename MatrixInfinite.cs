@@ -1,15 +1,14 @@
-﻿using MathNet.Numerics.LinearAlgebra;
-using System;
+﻿using System;
 
 namespace Convolution
 {
     abstract class MatrixInfinite
     {
-        protected Matrix<double> matrix;
+        protected Matrix values;
 
-        public MatrixInfinite(Matrix<double> matrix)
+        public MatrixInfinite(Matrix values)
         {
-            this.matrix = matrix;
+            this.values = values;
         }
 
         public abstract double this[int i, int j]
@@ -25,7 +24,7 @@ namespace Convolution
             return a - n * (int)Math.Floor((double)a / n);
         }
 
-        public MatrixInfiniteMod(Matrix<double> matrix) : base(matrix)
+        public MatrixInfiniteMod(Matrix values) : base(values)
         {
         }
 
@@ -33,14 +32,14 @@ namespace Convolution
         {
             get
             {
-                return matrix[ModFloor(i, matrix.RowCount), ModFloor(j, matrix.ColumnCount)];
+                return values[ModFloor(i, values.RowCount), ModFloor(j, values.ColumnCount)];
             }
         }
     }
 
     class MatrixInfiniteZero : MatrixInfinite
     {
-        public MatrixInfiniteZero(Matrix<double> matrix) : base(matrix)
+        public MatrixInfiniteZero(Matrix values) : base(values)
         {
         }
 
@@ -48,9 +47,9 @@ namespace Convolution
         {
             get
             {
-                if ((i >= 0) && (i < matrix.RowCount) && (j >= 0) && (j < matrix.ColumnCount))
+                if ((i >= 0) && (i < values.RowCount) && (j >= 0) && (j < values.ColumnCount))
                 {
-                    return matrix[i, j];
+                    return values[i, j];
                 }
                 else
                 {

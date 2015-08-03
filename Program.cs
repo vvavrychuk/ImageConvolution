@@ -11,7 +11,7 @@ namespace Convolution
 {
     class Program
     {
-        static double Sum(Matrix<double> matrix)
+        static double Sum(Matrix matrix)
         {
             double value = 0;
             for (var i = 0; i < matrix.RowCount; i++)
@@ -24,9 +24,9 @@ namespace Convolution
             return value;
         }
 
-        static Matrix<double> Convolution(Tuple<int, int> dimension, MatrixInfinite matrixInfinite, Matrix<double> matrixFinite)
+        static Matrix Convolution(Tuple<int, int> dimension, MatrixInfinite matrixInfinite, Matrix matrixFinite)
         {
-            var output = Matrix<double>.Build.Dense(dimension.Item1, dimension.Item2);
+            var output = new Matrix(dimension.Item1, dimension.Item2);
             for (var i1 = 0; i1 < matrixFinite.RowCount; i1++)
             {
                 for (var j1 = 0; j1 < matrixFinite.ColumnCount; j1++)
@@ -46,7 +46,7 @@ namespace Convolution
             return output;
         }
 
-        static Matrix<double> Blur(Matrix<double> input, Matrix<double> pattern)
+        static Matrix Blur(Matrix input, Matrix pattern)
         {
             var dimension = new Tuple<int, int>(input.RowCount, input.ColumnCount);
             return Convolution(dimension, new MatrixInfiniteMod(input), pattern) / Sum(pattern);
